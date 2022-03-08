@@ -26,9 +26,22 @@ class API {
 
   async getInitialPosts() {
     // code goes here for fetching the initial posts with the url, and options arguments
+    try {
+      const response = await fetch(this._url, this._options);
+      const postData = await response.json();
+      console.log('Retrieved Posts from API!');
+      this._posts = postData.data;
+    }
+    catch(error) {
+      console.log(error)
+    }
+    
+    
+    
+  
     // then handle the returned Promise with .then(response=>response.json()) followed by
     // chaining .then(jsonRes=>{ // put more in here }) and .catch(err=>{})
-
+    
 
   }
 
@@ -48,7 +61,7 @@ class API {
     return new Promise((resolve, reject) => {
       if (post) {
         // code goes here to add the new post onto the array of _posts
-
+        this._posts.push(post);
         console.log('Post was created!');
         setTimeout(() => {
           resolve(post);
@@ -63,18 +76,18 @@ class API {
     return new Promise((resolve, reject) => {
       //This is removing the last post from the post array
       const deletedPost = this._posts.pop();
-      console.log('Last Post was deleted!');
       setTimeout(() => {
         // if there is a post to delete from
         // handle the successful Promise with the deletedPost value
         // else reject with a new Error("custom message")
         // constructor value
         if(deletedPost) {
-            // code goes here
-
+          // code goes here
+          resolve(deletedPost);
+          console.log('Last Post was deleted!');
         } else {
           // code goes here
-
+          reject(new Error ('Something went wrong!'))
         }
       }, 500);
     });

@@ -6,23 +6,32 @@ const printPostRow = (post) => {
   console.log(`Message: ${post.text}`);
 };
 
+const myFunction = post => {
+  printPostRow(post);
+  console.log('------------------')
+};
 const start = async () => {
-  await api.getInitialPosts();
-
   // code goes below to call the api getInitialPosts method then call
   // api.getPosts() inside the callback of the successful aforementioned
   // call then if successful log '-----------------', loop thru the resolved
   // posts results and run printPostRow(post) for each one
   // log another '-----------------' after the loop and catch any errors
+  await api.getInitialPosts()
+  .then(await api.getPosts())
+  .then(console.log('---------------------'))
+  .then(api.posts.forEach(myFunction))
+  .catch(error => {
+    console.log(error)
+  })
+}
+ 
 
-
-
-};
 
 const addANewPost = () => {
   const firstInput = prompt('What is your first name?');
   const lastInput = prompt('What is your last name?');
   const postInput = prompt('What would you like to post?');
+ 
   if (firstInput && lastInput && postInput) {
     
     // code goes below for calling the .addPost() method on our api
@@ -41,19 +50,44 @@ const addANewPost = () => {
     // call then if successful log '-----------------', loop thru the resolved
     // posts results and run printPostRow(post) for each one
     // log another '-----------------' after the loop and catch any errors
-
-  }
+      api.addPost({
+        owner: {
+          firstName: firstInput,
+          lastName: lastInput,
+        },
+        text: postInput,
+      })
+      .then(resolvedValue => {
+        console.log(resolvedValue)
+        api.getPosts()
+      })
+      .then(() => {
+        console.log('-------------------');
+        (api.posts.forEach(myFunction))
+        //loop through currentPosts array value and run pringPostRow function
+      })
+      .catch(error  => {
+        console.log(error)
+  })
 };
+}
 
-const deleteAPost = () => {
+const deleteAPost = async () => {
   
   // code goes below to call the api delettePost method then call
   // api.getPosts() inside the callback of the successful aforementioned
   // call then if successful log '-----------------', loop thru the resolved
   // posts results and run printPostRow(post) for each one
   // log another '-----------------' after the loop and catch any errors
-
-
+  await api.deletePost()
+  .then(() => {
+    api.getPosts();
+  })
+  .then(console.log('---------------------'))
+  .then(api.posts.forEach(myFunction))
+  .catch(error => {
+    console.log(error)
+  })
 };
 
 // NO NEED TO CHANGE ANYTHING BELOW BUT NO HARM IN GOOGLING SOME OF IT
