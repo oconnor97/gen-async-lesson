@@ -1,9 +1,17 @@
 const api = new API();
+let postContainer = document.getElementById('postsCtn');
 
 // This is a utility function to print individual posts to the console
 const printPostRow = (post) => {
   console.log(`Left By: ${post.owner.firstName} ${post.owner.lastName}`);
   console.log(`Message: ${post.text}`);
+  const postAuthor = document.createElement('p');
+  const postpgh = document.createElement('p');
+  // postContainer.innerHTML = "";
+  postAuthor.innerHTML = `Left By: ${post.owner.firstName} ${post.owner.lastName}`;
+  postpgh.innerHTML = `Message: ${post.text}`;
+  postContainer.appendChild(postAuthor);
+  postContainer.appendChild(postpgh);
 };
 
 const myFunction = post => {
@@ -18,13 +26,14 @@ const start = async () => {
   // log another '-----------------' after the loop and catch any errors
   await api.getInitialPosts()
   .then(await api.getPosts())
-  .then(console.log('---------------------'))
-  .then(api.posts.forEach(myFunction))
+  .then(api.posts.forEach((post) => {
+    printPostRow(post);
+  }))
   .catch(error => {
     console.log(error)
   })
 }
- 
+
 
 
 const addANewPost = () => {
@@ -79,12 +88,15 @@ const deleteAPost = async () => {
   // call then if successful log '-----------------', loop thru the resolved
   // posts results and run printPostRow(post) for each one
   // log another '-----------------' after the loop and catch any errors
+  postContainer.innerHTML = ""
   await api.deletePost()
-  .then(() => {
-    api.getPosts();
-  })
+  // .then(() => {
+  //   api.getPosts();
+  // })
   .then(console.log('---------------------'))
-  .then(api.posts.forEach(myFunction))
+  .then(api.posts.forEach((post) => {
+    printPostRow(post)
+  }))
   .catch(error => {
     console.log(error)
   })
