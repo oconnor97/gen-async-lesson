@@ -59,6 +59,7 @@ const addANewPost = () => {
     // call then if successful log '-----------------', loop thru the resolved
     // posts results and run printPostRow(post) for each one
     // log another '-----------------' after the loop and catch any errors
+    postContainer.innerHTML = ""
       api.addPost({
         owner: {
           firstName: firstInput,
@@ -72,7 +73,9 @@ const addANewPost = () => {
       })
       .then(() => {
         console.log('-------------------');
-        (api.posts.forEach(myFunction))
+        (api.posts.forEach((post) => {
+          printPostRow(post)
+        }))
         //loop through currentPosts array value and run pringPostRow function
       })
       .catch(error  => {
